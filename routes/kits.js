@@ -42,6 +42,36 @@ router.get("/", (req, res) => {
     });
 });
 
+// 3. Search kits by kit name or sport
+router.get("/search", (req, res) => {
+    const searchQuery = req.query.q;
+
+    // Check if search query is empty
+    if (!searchQuery || !searchQuery.trim()) {
+        return res.status(400).json({
+            message: "Please provide a search query"
+        });
+    }
+
+    const searchTerm = `%${searchQuery.trim()}%`;
+
+    const sql = `
+        SELECT * FROM kits
+        WHERE LOWER(kit_name) LIKE LOWER(?)
+        OR LOWER(sport) LIKE LOWER(?)
+    `;
+
+    db.all(sql, [searchTerm, searchTerm], (err, rows) => {
+        if (err) {
+            return res.status(500).json({
+                message: "Error searching kits"
+            });
+        }
+
+        res.status(200).json(rows);
+    });
+});
+
 // 3. Get a kit by ID
 router.get("/:id", (req, res) => {
     const id = req.params.id;

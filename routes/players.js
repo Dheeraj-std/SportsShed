@@ -35,6 +35,36 @@ router.get("/", (req, res) => {
     });
 });
 
+// 3. Search players by name or email
+router.get("/search", (req, res) => {
+    const searchQuery = req.query.q;
+
+    // Check if search query is empty
+    if (!searchQuery || !searchQuery.trim()) {
+        return res.status(400).json({
+            message: "Please provide a search query"
+        });
+    }
+
+    const searchTerm = `%${searchQuery.trim()}%`;
+
+    const sql = `
+        SELECT * FROM players
+        WHERE LOWER(player_name) LIKE LOWER(?)
+        OR LOWER(email) LIKE LOWER(?)
+    `;
+
+    db.all(sql, [searchTerm, searchTerm], (err, rows) => {
+        if (err) {
+            return res.status(500).json({
+                message: "Error searching players"
+            });
+        }
+
+        res.status(200).json(rows);
+    });
+});
+
 // 3. Get a player by ID
 router.get("/:id", (req, res) => {
     const id = req.params.id;
