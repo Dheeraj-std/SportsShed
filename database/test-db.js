@@ -1,16 +1,28 @@
 
-const db = require("./db");
+const { db, initializeDatabase } = require("./db");
 
-db.all(
-    "SELECT name FROM sqlite_master WHERE type = 'table'",
-    (err, rows) => {
-        if (err) {
-            console.error("Error:", err.message);
-        } else {
-            console.log("\nSportsShed Database Tables:");
-            console.table(rows);
-        }
+async function testDatabase() {
+    try {
+        await initializeDatabase();
 
+        console.log("\nSportsShed Database Tables:");
+
+        db.all(
+            "SELECT name FROM sqlite_master WHERE type = 'table' ORDER BY name",
+            (err, rows) => {
+                if (err) {
+                    console.error("Error:", err.message);
+                } else {
+                    console.table(rows);
+                }
+
+                db.close();
+            }
+        );
+    } catch (error) {
+        console.error("Database test failed:", error.message);
         db.close();
     }
-);
+}
+
+testDatabase();

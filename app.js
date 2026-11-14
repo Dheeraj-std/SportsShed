@@ -1,8 +1,7 @@
 
 const express = require("express");
 
-// Import database connection
-const db = require("./database/db");
+const { initializeDatabase } = require("./database/db");
 
 const app = express();
 const PORT = 3000;
@@ -12,7 +11,7 @@ const playersRoutes = require("./routes/players");
 const kitsRoutes = require("./routes/kits");
 const loansRoutes = require("./routes/loans");
 
-// Middleware to read JSON request bodies
+// Middleware
 app.use(express.json());
 
 // Home route
@@ -24,7 +23,7 @@ app.get("/", (req, res) => {
     });
 });
 
-// Health check route
+// Health check
 app.get("/health", (req, res) => {
     res.status(200).json({
         status: "OK",
@@ -32,12 +31,25 @@ app.get("/health", (req, res) => {
     });
 });
 
-// Connect route files
+// API routes
 app.use("/players", playersRoutes);
 app.use("/kits", kitsRoutes);
 app.use("/loans", loansRoutes);
 
-// Start server
-app.listen(PORT, () => {
-    console.log(`SportsShed server running at http://localhost:${PORT}`);
-});
+// Initialize database BEFORE starting server
+async function startServer() {
+    try {
+        await initializeDatabase();
+
+        app.listen(PORT, () => {
+            console.log(
+                `SportsShed server running at http://localhost:${PORT}`
+            );
+        });
+    } catch (error) {
+        console.error("Failed to initialize database:", error.message);
+        process.exit(1);
+    }
+}
+
+startServer();
