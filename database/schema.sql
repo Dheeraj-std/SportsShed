@@ -29,3 +29,7 @@ CREATE TABLE IF NOT EXISTS loans (
     FOREIGN KEY (player_id) REFERENCES players(player_id),
     FOREIGN KEY (kit_id) REFERENCES kits(kit_id)
 );
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_unique_active_kit_loan
+    ON loans(kit_id)
+    WHERE status = 'ACTIVE';
