@@ -147,7 +147,7 @@ router.put("/:id", (req, res) => {
                 return_date = COALESCE(?, return_date)
             WHERE loan_id = ?
         `;
-        db.run(sql, [status, return_date, loan_id], function(err) {
+        db.run(sql, [status, return_date, loan_id], function (err) {
             if (err) {
                 return res.status(400).json({ message: "Error updating loan: " + err.message });
             }
