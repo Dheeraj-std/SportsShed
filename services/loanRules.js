@@ -409,6 +409,7 @@ function returnLoanByKitAsync(kit_id, return_date) {
 }
 
 module.exports = {
+    withTransaction,
     checkKitAvailability,
     createLoanWithValidation,
     returnLoan,
