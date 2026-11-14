@@ -2,9 +2,10 @@
 const express = require("express");
 const router = express.Router();
 const { db } = require("../database/db");
+const { validatePlayer } = require("../middleware/validation");
 
 // 1. Add a new player
-router.post("/", (req, res) => {
+router.post("/", validatePlayer, (req, res) => {
     const { player_name, email, phone } = req.body;
 
     const sql = "INSERT INTO players (player_name, email, phone) VALUES (?, ?, ?)";
@@ -54,7 +55,7 @@ router.get("/:id", (req, res) => {
 });
 
 // 4. Update a player
-router.put("/:id", (req, res) => {
+router.put("/:id", validatePlayer, (req, res) => {
     const id = req.params.id;
     const { player_name, email, phone } = req.body;
 

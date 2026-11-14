@@ -2,9 +2,10 @@
 const express = require("express");
 const router = express.Router();
 const { db } = require("../database/db");
+const { validateKit } = require("../middleware/validation");
 
 // 1. Add a new kit
-router.post("/", (req, res) => {
+router.post("/", validateKit, (req, res) => {
     const { kit_name, sport, quantity } = req.body;
 
     const sql = `
@@ -65,7 +66,7 @@ router.get("/:id", (req, res) => {
 });
 
 // 4. Update kit details
-router.put("/:id", (req, res) => {
+router.put("/:id", validateKit, (req, res) => {
     const id = req.params.id;
     const { kit_name, sport, quantity } = req.body;
 

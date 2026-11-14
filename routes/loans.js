@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { db } = require("../database/db");
 const loanRules = require("../services/loanRules");
+const {validateLoan, validateReturnDate} = require("../middleware/validation");
 
 // 1. Retrieve all loans
 router.get("/", (req, res) => {
@@ -64,7 +65,7 @@ router.get("/:id", (req, res) => {
 });
 
 // 5. Create a loan with NO DOUBLE BOOKING enforcement
-router.post("/", (req, res) => {
+router.post("/", validateLoan, (req, res) => {
     const { player_id, kit_id, issue_date } = req.body;
 
     if (!player_id || !kit_id || !issue_date) {
@@ -100,13 +101,13 @@ function returnLoanHandler(req, res) {
 }
 
 // 6. Return loan endpoints (supports PUT, PATCH, and POST)
-router.put("/:id/return", returnLoanHandler);
-router.patch("/:id/return", returnLoanHandler);
-router.post("/:id/return", returnLoanHandler);
-router.put("/return/:id", returnLoanHandler);
+router.put("/:id/return", validateReturnDate, returnLoanHandler);
+router.patch("/:id/return", validateReturnDate, returnLoanHandler);
+router.post("/:id/return", validateReturnDate, returnLoanHandler);
+router.put("/return/:id", validateReturnDate, returnLoanHandler);
 
 // 7. General return endpoint via POST body (accepts { loan_id } or { kit_id })
-router.post("/return", (req, res) => {
+router.post("/return", validateReturnDate, (req, res) => {
     const { loan_id, kit_id, return_date } = req.body || {};
 
     if (loan_id) {
