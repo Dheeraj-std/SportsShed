@@ -2,12 +2,9 @@
 
 **Backend Development Fundamentals (BDF) Group Assignment**  
 **Group:** 5  
-**Academic Year:** 2026–2027  
 **Repository:** [Dheeraj-std/SportsShed](https://github.com/Dheeraj-std/SportsShed)
 
 SportsShed is a backend application for managing players, sports kits, and equipment loans. It provides REST APIs to maintain player and kit records, issue equipment, retrieve loan information, search records, validate input, and process equipment returns. The backend is built with Node.js and Express.js and uses SQLite for data storage.
-
-> **Documentation scope:** This README combines the project overview and the five members' individual contribution reports. Individual contribution details are based on the information supplied by the respective members. Screenshots included here are the evidence files provided with the project documentation. Where member-specific screenshots were not supplied, this README states that clearly instead of inventing evidence.
 
 ---
 
